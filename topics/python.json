@@ -1,0 +1,6 @@
+[{"question":"Python est un langage ____ ?","options":["interprété","machine","compilé","binaire"],"answer":"interprété"},
+{"question":"Laquelle des fonctions suivantes convertit un « string » en « float » en python?","options":["str(x)","float(x)","long(x [,base] )" ,"int(x [,base])"],"answer":"float(x)"},
+{"question":"En python 3, que fait l’opérateur // ?","options":["Division entière","Retourne le reste","Division du float par zéro" ,"idem a ** b"],"answer":"Division entière"},
+{"question":"Quel est le type de données pour un caractère en python?","options":["chr","char","Character" ,"python ne possède aucun type de données pour les caractères"],"answer":"python ne possède aucun type de données pour les caractères"},
+{"question":"Quelle est la fonction qui compare les éléments des deux listes?","options":["cmp(list1, list2)","eq(list1, list2)","len(list1, list2)" ,"max(list1, list2)"],"answer":"cmp(list1, list2)"}
+]
