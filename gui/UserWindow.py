@@ -16,7 +16,6 @@ class UserWindow(ctk.CTk):
         self._create_components()
     
     def _basic_config(self):
-        ctk.set_appearance_mode("Dark")  
         self.title("Authentification")
         self.resizable(False, False)
         window_width = 500
@@ -117,5 +116,6 @@ class UserWindow(ctk.CTk):
             self.data = temp
 
 if __name__ == '__main__':
+    ctk.set_appearance_mode("Dark")
     UserWindow()
     tk.mainloop()
