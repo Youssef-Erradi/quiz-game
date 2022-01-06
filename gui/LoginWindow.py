@@ -7,7 +7,10 @@ from gui.UserWindow import UserWindow
 class LoginWindow(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        ctk.set_appearance_mode("Dark")
+        self._basic_config()
+        self._create_components()
+    
+    def _basic_config(self):
         self.title("Authentification")
         self.resizable(False, False)
         window_width = 500
@@ -15,7 +18,8 @@ class LoginWindow(ctk.CTk):
         margin_x = int((self.winfo_screenwidth()/2) - (window_width/2))
         margin_y = int((self.winfo_screenheight()/2) - (window_height/2))
         self.geometry(f"{window_width}x{window_height}+{margin_x}+{margin_y}")
-        
+    
+    def _create_components(self):
         ctk.CTkLabel(self, text="Entrez votre username", width=190, height=40).place(x=30,y=50)
         self.username = ctk.CTkEntry(self, width=180, height=40, font=("Calibri Light", 12), corner_radius=8)
         self.username.place(x=250,y=50)
