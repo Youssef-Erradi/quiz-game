@@ -2,10 +2,12 @@
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
+from gui.UserWindow import UserWindow
 
 class LoginWindow(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        ctk.set_appearance_mode("Dark")
         self.title("Authentification")
         self.resizable(False, False)
         window_width = 500
@@ -29,9 +31,11 @@ class LoginWindow(ctk.CTk):
         self.reset.place(x=270, y=180)
     
     def _submit(self):
-        if len(self.password.get()) == 0 and len(self.username.get()) ==0 :
+        if len(self.password.get()) == 0 or self.username.get().strip() == "" :
             messagebox.showerror("Erreur", "Veuillez entrer toutes les informations demandées")
             return
+        self.withdraw()
+        UserWindow()
     
     def _reset(self):
         self.username.delete(0, tk.END)
