@@ -1,8 +1,10 @@
 # encoding:utf-8
 import tkinter as tk
-from tkinter import messagebox
 import customtkinter as ctk
+from tkinter import messagebox
 from gui.UserWindow import UserWindow
+from gui.AdminWindow import AdminWindow
+from dao.UserDB import UserDao
 
 class LoginWindow(ctk.CTk):
     def __init__(self, *args, **kwargs):
@@ -24,22 +26,29 @@ class LoginWindow(ctk.CTk):
         self.username = ctk.CTkEntry(self, width=180, height=40, font=("Calibri Light", 12), corner_radius=8)
         self.username.place(x=250,y=50)
         
-        ctk.CTkLabel(self, text="Entrez votre mot de passe", width=190, height=40).place(x=43,y=100)
+        ctk.CTkLabel(self, text="Entrez votre mot de passe", width=190, height=40).place(x=43,y=120)
         self.password = ctk.CTkEntry(self, show="*",width=180, height=40, font=("Calibri Light", 12), corner_radius=8)
-        self.password.place(x=250,y=100)
+        self.password.place(x=250,y=120)
 
         self.submit = ctk.CTkButton(master=self, text="Valider", command=self._submit)
-        self.submit.place(x=120, y=180)
+        self.submit.place(x=120, y=210)
         
         self.reset = ctk.CTkButton(master=self, text="Effacer", command=self._reset)
-        self.reset.place(x=270, y=180)
+        self.reset.place(x=270, y=210)
     
     def _submit(self):
         if len(self.password.get()) == 0 or self.username.get().strip() == "" :
-            messagebox.showerror("Erreur", "Veuillez entrer toutes les informations demandées")
+            messagebox.showwarning("Erreur", "Veuillez entrer toutes les informations demandées")
+            return
+        user = UserDao.get_user(self.username.get(), self.password.get())
+        if user is None:
+            messagebox.showerror("Erreur", "ce utilisateur n'existe pas")
             return
         self.withdraw()
-        UserWindow()
+        if user.admin:
+            AdminWindow(user=user)
+        else:
+            UserWindow(user=user)
     
     def _reset(self):
         self.username.delete(0, tk.END)
