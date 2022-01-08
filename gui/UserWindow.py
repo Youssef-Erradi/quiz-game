@@ -2,6 +2,7 @@
 import tkinter as tk
 import customtkinter as ctk
 import random as rd
+import threading
 
 class UserWindow(ctk.CTk):
     def __init__(self, user=None, *args, **kwargs):
@@ -14,6 +15,7 @@ class UserWindow(ctk.CTk):
         self.options = []
         self.answers = []
         self._create_components()
+        self._set_interval(self._timer, 1)
     
     def _basic_config(self):
         self.title(f"Bienvenue {self.user}")
@@ -52,6 +54,9 @@ class UserWindow(ctk.CTk):
             for _ in self.data:
                 self.counter += 25
                 self.answers.append(None)
+        
+        self.lbl_counter = ctk.CTkLabel(self, text=f"{self.counter} secondes", width=450, height=50)
+        self.lbl_counter.place(x=200, y=300)
         
         self._setup_components()
     
@@ -112,7 +117,24 @@ class UserWindow(ctk.CTk):
             temp = eval(file.readline())
             rd.shuffle(temp)
             self.data = temp
-
+    
+    def _set_interval(self, func, sec):
+        def wrapper():
+            self._set_interval(func, sec)
+            func()
+        t = threading.Timer(sec, wrapper)
+        if self.counter == 1:
+            t.cancel()
+            return
+        t.start()
+        return t
+    
+    def _timer(self):
+        self.counter -= 1
+        if self.counter  == 0 :
+            self._submit()
+        self.lbl_counter.text_label["text"] = f"{self.counter} secondes"
+    
 if __name__ == '__main__':
     ctk.set_appearance_mode("System")
     UserWindow()
