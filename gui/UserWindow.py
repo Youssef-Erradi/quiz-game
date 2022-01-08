@@ -1,6 +1,7 @@
 # encoding:utf-8
 import tkinter as tk
 import customtkinter as ctk
+from tkinter import messagebox
 import random as rd
 import threading
 
@@ -110,7 +111,15 @@ class UserWindow(ctk.CTk):
         self.btn_clear.configure(state=tk.DISABLED)
     
     def _submit(self):
-        print(self.data[self.index]["question"], self.answers[self.index])
+        score = 0
+        self.counter = 0
+        for i in range(len(self.answers)):
+            if self.answers[i] == self.data[i]["answer"]:
+                score += 1
+        print(score)
+        self.withdraw()
+        messagebox.showinfo("Info", f"Votre note finale est : {score} ({(score/len(self.answers))*100}%)")
+        self.destroy()
     
     def _load_data(self):
         with open(file="../topics/python.json") as file :
@@ -123,19 +132,20 @@ class UserWindow(ctk.CTk):
             self._set_interval(func, sec)
             func()
         t = threading.Timer(sec, wrapper)
-        if self.counter == 1:
-            t.cancel()
+        if self.counter == 0:
             return
         t.start()
         return t
     
     def _timer(self):
         self.counter -= 1
-        if self.counter  == 0 :
+        if self.counter == 0:
             self._submit()
+            return
         self.lbl_counter.text_label["text"] = f"{self.counter} secondes"
     
 if __name__ == '__main__':
     ctk.set_appearance_mode("System")
     UserWindow()
     tk.mainloop()
+    exit(0)
