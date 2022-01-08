@@ -33,5 +33,5 @@ class UserDao:
         user = None
         row = cursor.execute("Select * from users where username=? and password=?", (username, password)).fetchone()
         if row is not None:
-            user = User(row[0], row[1])
+            user = User(row[0], row[1], row[2])
         return user
