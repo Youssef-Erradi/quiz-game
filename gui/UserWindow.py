@@ -1,25 +1,25 @@
 # encoding:utf-8
 import tkinter as tk
-import random as rd
-import time as tm
-from tkinter import messagebox
 import customtkinter as ctk
+import random as rd
 
 class UserWindow(ctk.CTk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
         self._basic_config()
         self.data = []
         self.index = 0
+        self.counter = 0
         self.options = []
         self.answers = []
         self._create_components()
     
     def _basic_config(self):
-        self.title("Authentification")
+        self.title(f"Bienvenue {self.user}")
         self.resizable(False, False)
         window_width = 500
-        window_height = 300
+        window_height = 350
         margin_x = int((self.winfo_screenwidth()/2) - (window_width/2))
         margin_y = int((self.winfo_screenheight()/2) - (window_height/2))
         self.geometry(f"{window_width}x{window_height}+{margin_x}+{margin_y}")
@@ -36,6 +36,7 @@ class UserWindow(ctk.CTk):
         
         self.btn_previous = ctk.CTkButton(master=self, text="<", width=50, command=self._previous)
         self.btn_previous.place(x=40, y=250)
+        self.btn_previous.configure(state=tk.DISABLED)
         
         self.btn_submit = ctk.CTkButton(master=self, text="Submit", command=self._submit)
         self.btn_submit.place(x=120, y=250)
@@ -49,10 +50,11 @@ class UserWindow(ctk.CTk):
         if len(self.data) == 0:
             self._load_data()
             for _ in self.data:
+                self.counter += 25
                 self.answers.append(None)
         
         self._setup_components()
-        
+    
     def _setup_components(self):
         if self.index == -1 : return
         json = self.data[self.index]
@@ -61,7 +63,6 @@ class UserWindow(ctk.CTk):
             self.btn_clear.configure(state=tk.DISABLED)
         else :
             self.btn_clear.configure(state=tk.NORMAL)
-            
         
         for index,option in enumerate(json["options"]):
             self.options[index].set_text(option)
@@ -108,14 +109,11 @@ class UserWindow(ctk.CTk):
     
     def _load_data(self):
         with open(file="../topics/python.json") as file :
-            temp = ""
-            for line in file.readlines():
-                temp += line.strip()
-            temp = eval(temp)
+            temp = eval(file.readline())
             rd.shuffle(temp)
             self.data = temp
 
 if __name__ == '__main__':
-    ctk.set_appearance_mode("Dark")
+    ctk.set_appearance_mode("System")
     UserWindow()
     tk.mainloop()
