@@ -6,9 +6,10 @@ import random as rd
 import threading
 
 class UserWindow(ctk.CTk):
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, user, filename, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
+        self.filename = filename
         self._basic_config()
         self.data = []
         self.index = 0
@@ -123,7 +124,7 @@ class UserWindow(ctk.CTk):
         self.destroy()
     
     def _load_data(self):
-        with open(file="../topics/python.json") as file :
+        with open(file=f"../topics/{self.filename}") as file :
             temp = eval(file.readline())
             rd.shuffle(temp)
             self.data = temp

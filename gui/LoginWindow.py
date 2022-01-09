@@ -2,9 +2,9 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import messagebox
-from gui.UserWindow import UserWindow
 from gui.AdminWindow import AdminWindow
 from dao.UserDB import UserDao
+from gui.QuizChoiceWindow import QuizChoiceWindow
 
 class LoginWindow(ctk.CTk):
     def __init__(self, *args, **kwargs):
@@ -48,7 +48,7 @@ class LoginWindow(ctk.CTk):
         if user.admin:
             AdminWindow(user=user)
         else:
-            UserWindow(user=user)
+            QuizChoiceWindow(user=user)
     
     def _reset(self):
         self.username.delete(0, tk.END)
