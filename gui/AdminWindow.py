@@ -5,7 +5,6 @@ from tkinter import ttk
 from os import walk
 
 class AdminWindow(ctk.CTk):
-
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
@@ -15,7 +14,7 @@ class AdminWindow(ctk.CTk):
         self.entries = []
         self._basic_config()
         self._create_components()
-
+        self.mainloop()
     
     def _basic_config(self):
         self.title("Administration")
@@ -118,7 +117,3 @@ class AdminWindow(ctk.CTk):
             self.data = eval(file.readline())
             for iid,json in enumerate(self.data):
                 self.data_table.insert('', index=tk.END, iid=iid, values=(json["question"],))
-
-if __name__ == '__main__':
-    AdminWindow()
-    tk.mainloop()
