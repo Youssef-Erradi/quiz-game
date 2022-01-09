@@ -54,7 +54,6 @@ class LoginWindow(ctk.CTk):
         self.username.delete(0, tk.END)
         self.password.delete(0, tk.END)
     
-if __name__ == '__main__':
-    ctk.set_appearance_mode("Dark")
-    win = LoginWindow()
-    win.mainloop()
+if __name__ == '__main__' :
+    ctk.set_appearance_mode("System")
+    LoginWindow().mainloop()
