@@ -20,7 +20,7 @@ class AdminWindow(ctk.CTk):
         self.mainloop()
     
     def _basic_config(self):
-        self.title("Administration")
+        self.title(f"Administration : {self.user}")
         self.geometry(f"{700}x{500}")
         self.resizable(False, False)
     
