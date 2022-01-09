@@ -4,6 +4,7 @@ import customtkinter as ctk
 from tkinter import ttk
 from tkinter import messagebox
 from os import walk
+from gui.AddUserWindow import AddUserWindow
 
 class AdminWindow(ctk.CTk):
     def __init__(self, user=None, *args, **kwargs):
@@ -35,10 +36,14 @@ class AdminWindow(ctk.CTk):
                                 corner_radius=8, command=lambda filename=filename : self._load_data(filename))
             btn.place(relx=0.5, y=35+(45*index), anchor=tk.CENTER)
             self.btn_files.append(btn)
-
+            
         self.btn_add_quiz = ctk.CTkButton(master=self.frame_left, text="Ajouter Quiz", corner_radius=8, command=self._add_quiz)
-        self.btn_add_quiz.place(relx=0.5, rely=0.92, anchor=tk.CENTER)
+        self.btn_add_quiz.place(relx=0.5, rely=0.82, anchor=tk.CENTER)
         
+        self.btn_add_user = ctk.CTkButton(master=self.frame_left, text="Ajouter Utilisateur",
+                                          corner_radius=8, command=AddUserWindow)
+        self.btn_add_user.place(relx=0.5, rely=0.92, anchor=tk.CENTER)
+         
         self.frame_info = ctk.CTkFrame(master=self.frame_right, width=380, height=230, corner_radius=10)
         self.frame_info.place(relx=0.5, y=20, anchor=tk.N)
         
@@ -104,8 +109,7 @@ class AdminWindow(ctk.CTk):
         with open(file=f"../topics/{filename}", mode="w") as file :
             file.write("[]")
         self._load_data(filename)
-        pass
-    
+
     def _save(self):
         is_valid = True
         for entry in self.entries:
@@ -158,3 +162,5 @@ class AdminWindow(ctk.CTk):
             self.data = eval(file.readline())
             for iid,json in enumerate(self.data):
                 self.data_table.insert('', index=tk.END, iid=iid, values=(json["question"],))
+if __name__ == '__main__':
+    AdminWindow()

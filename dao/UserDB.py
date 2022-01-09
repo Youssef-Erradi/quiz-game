@@ -22,8 +22,11 @@ class UserDao:
             return False
         cursor = UserDao.connection.cursor() 
         user.password = hl.sha256(user.password.encode('utf-8')).hexdigest()
-        cursor.execute("insert into users values (?, ?, ?)", (user.username, user.password, user.admin))
-        cursor.execute("commit")
+        try :
+            cursor.execute("insert into users values (?, ?, ?)", (user.username, user.password, user.admin))
+            cursor.execute("commit")
+        except sql.IntegrityError:
+            return False
         return True
     
     @staticmethod
