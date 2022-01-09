@@ -12,7 +12,7 @@ class User:
         return self.password!="" and self.username!="" and (self.admin is True or self.admin is False)
     
     def __str__(self):
-        return f"User(username={self.username}, admin={self.admin})"
+        return f"{self.username}"
 
 class UserDao:
     connection = sql.connect("../db.sqlite3")    
