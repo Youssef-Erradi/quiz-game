@@ -44,7 +44,7 @@ class LoginWindow(ctk.CTk):
         if user is None:
             messagebox.showerror("Erreur", "ce utilisateur n'existe pas")
             return
-        self.withdraw()
+        self.destroy()
         if user.admin:
             AdminWindow(user=user)
         else:
@@ -56,5 +56,5 @@ class LoginWindow(ctk.CTk):
     
 if __name__ == '__main__':
     ctk.set_appearance_mode("Dark")
-    LoginWindow()
-    tk.mainloop()
+    win = LoginWindow()
+    win.mainloop()
