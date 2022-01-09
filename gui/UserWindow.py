@@ -118,7 +118,6 @@ class UserWindow(ctk.CTk):
         for i in range(len(self.answers)):
             if self.answers[i] == self.data[i]["answer"]:
                 score += 1
-        print(score)
         self.withdraw()
         messagebox.showinfo("Info", f"Votre note finale est : {score} ({(score/len(self.answers))*100}%)")
         self.destroy()
