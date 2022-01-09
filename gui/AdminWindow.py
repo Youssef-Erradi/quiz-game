@@ -2,13 +2,15 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
+from tkinter import messagebox
 from os import walk
 
 class AdminWindow(ctk.CTk):
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        self.data = []
+        self.filename = ""
+        self.data = None
         self.btn_files = []
         self.options = []
         self.entries = []
@@ -31,7 +33,7 @@ class AdminWindow(ctk.CTk):
         for index,filename in enumerate(next(walk("../topics/"), (None, None, []))[2]) :
             btn = ctk.CTkButton(master=self.frame_left, text=filename.split(".")[0],
                                 corner_radius=8, command=lambda filename=filename : self._load_data(filename))
-            btn.place(relx=0.5, y=35+(50*index), anchor=tk.CENTER)
+            btn.place(relx=0.5, y=35+(45*index), anchor=tk.CENTER)
             self.btn_files.append(btn)
 
         self.btn_add_quiz = ctk.CTkButton(master=self.frame_left, text="Ajouter Quiz", corner_radius=8, command=self._add_quiz)
@@ -78,15 +80,30 @@ class AdminWindow(ctk.CTk):
         check_box.on_leave()
     
     def _add_question(self):
-        # Enter Question
-        # add to self.data
-        # add to self.data_table
-        pass
+        if self.data is None :
+            messagebox.showwarning("Erreur", "Veuillez Choisir un quiz d'abord")
+            return
+        question = ctk.CTkDialog(master=None, text="Entrez la question : ", title="Ajouter une question").get_input()
+        if question.strip() == "":
+            return
+        question = question.strip()
+        json = {"question":question, "options":[], "answer":""}
+        self.data.append(json)
+        self.data_table.insert('', index=tk.END, iid=len(self.data)-1, values=(json["question"],))
     
     def _add_quiz(self):
-        # Enter quiz name
-        # create json file
-        # create buttons
+        y = self.btn_files[-1].winfo_y()+60
+        quiz_name = ctk.CTkDialog(master=None, text="Entrez le nom du quiz : ", title="Ajouter un quiz").get_input()
+        if quiz_name.strip().replace(".","") == "":
+            return
+        filename = quiz_name.strip().lower() + ".json"
+        btn = ctk.CTkButton(master=self.frame_left, text=filename.split(".")[0],
+                                corner_radius=8, command=lambda filename=filename : self._load_data(filename))
+        btn.place(relx=0.5, y=y, anchor=tk.CENTER)
+        self.btn_files.append(btn)
+        with open(file=f"../topics/{filename}", mode="w") as file :
+            file.write("[]")
+        self._load_data(filename)
         pass
     
     def _save(self):
@@ -95,25 +112,49 @@ class AdminWindow(ctk.CTk):
             if entry.get().strip() == "" :
                 is_valid = False
                 break
+        answer_selected = 0
         for option in self.options:
-            if option.get() == 1 and is_valid:
-                is_valid = True
-                break
-        print(str(self.data[self.index]).replace("'", "\""))
-        # modify the self.data[self.index] object if is_valid :
+            answer_selected += option.get()
+        if answer_selected == 0 :
+            is_valid = False
+        
+        if not is_valid:
+            messagebox.showerror("Erreur", "Veuillez remplir toutes les options et choisir la reponse juste")
+            return
+        
+        self.data[self.index]["options"].clear()
+        for index in range(4):
+            self.data[self.index]["options"].append(self.entries[index].get().strip())
+            if self.options[index].get() == 1 :
+                self.data[self.index]["answer"] = self.entries[index].get().strip()
+        
+        with open(file=f"../topics/{self.filename}", mode="w") as file :
+            file.write(str(self.data).replace("'", "\""))
+            
+        messagebox.showinfo("Information", "Les modifications sont enregistrées avec succés")
     
     def _on_table_click(self, event):
-        self.index = int( self.data_table.identify("item",event.x,event.y) )
+        try:
+            self.index = int( self.data_table.identify("item",event.x,event.y) )
+        except ValueError:
+            return
         self.lbl_question.text_label["text"] = self.data[self.index]["question"]
-        for i,option in enumerate(self.data[self.index]["options"]):
-            self.options[i].check_state = option==self.data[self.index]["answer"]
-            self.options[i].on_leave()
-            self.entries[i].delete(0, tk.END)
-            self.entries[i].insert(0,option)
+        if len(self.data[self.index]["options"]) == 0:
+            for i in range(4):
+                self.entries[i].delete(0, tk.END)
+                self.options[i].check_state = False
+                self.options[i].on_leave()
+        else:
+            for i,option in enumerate(self.data[self.index]["options"]):
+                self.options[i].check_state = option==self.data[self.index]["answer"]
+                self.options[i].on_leave()
+                self.entries[i].delete(0, tk.END)
+                self.entries[i].insert(0,option)
 
     def _load_data(self, filename):
         self.data_table.delete(*self.data_table.get_children())
-        with open(file=f"../topics/{filename}") as file :
+        self.filename = filename
+        with open(file=f"../topics/{self.filename}") as file :
             self.data = eval(file.readline())
             for iid,json in enumerate(self.data):
                 self.data_table.insert('', index=tk.END, iid=iid, values=(json["question"],))
