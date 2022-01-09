@@ -17,6 +17,7 @@ class UserWindow(ctk.CTk):
         self.answers = []
         self._create_components()
         self._set_interval(self._timer, 1)
+        self.mainloop()
     
     def _basic_config(self):
         self.title(f"Bienvenue {self.user}")
@@ -130,7 +131,10 @@ class UserWindow(ctk.CTk):
     def _set_interval(self, func, sec):
         def wrapper():
             self._set_interval(func, sec)
-            func()
+            try:
+                func()
+            except RuntimeError:
+                self.counter = 0
         t = threading.Timer(sec, wrapper)
         if self.counter == 0:
             return
@@ -143,9 +147,3 @@ class UserWindow(ctk.CTk):
             self._submit()
             return
         self.lbl_counter.text_label["text"] = f"{self.counter} secondes"
-    
-if __name__ == '__main__':
-    ctk.set_appearance_mode("System")
-    UserWindow()
-    tk.mainloop()
-    exit(0)
