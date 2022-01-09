@@ -162,5 +162,3 @@ class AdminWindow(ctk.CTk):
             self.data = eval(file.readline())
             for iid,json in enumerate(self.data):
                 self.data_table.insert('', index=tk.END, iid=iid, values=(json["question"],))
-if __name__ == '__main__':
-    AdminWindow()

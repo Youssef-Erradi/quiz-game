@@ -61,6 +61,3 @@ class AddUserWindow(ctk.CTk):
         self.password2.delete(0, tk.END)
         self.admin.check_state = False
         self.admin.on_leave()
-        
-if __name__ == '__main__':
-    AddUserWindow()
